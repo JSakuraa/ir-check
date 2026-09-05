@@ -12,12 +12,10 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    Check {
-        file: PathBuf,
-    },
+    Check { file: PathBuf },
 }
 
-fn main() -> Result<(), Box<dyn, std::error::Error>> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
     match cli.command {
