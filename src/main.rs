@@ -1,3 +1,7 @@
+mod diagnostic;
+mod ir;
+mod parser;
+
 use clap::{Parser, Subcommand};
 use std::fs;
 use std::path::PathBuf;
@@ -21,7 +25,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     match cli.command {
         Commands::Check { file } => {
             let source = fs::read_to_string(&file)?;
-            println!("{source}");
+            match parser::parse(&source) {
+                Ok(program) => {
+                    println!("{program:#?}");
+                }
+                Err(diagnostic) => {
+                    eprintln!(
+                        "error[{}] on line {}: {}",
+                        diagnostic.code.as_str(),
+                        diagnostic.span.line,
+                        diagnostic.message
+                    );
+
+                    if let Some(help) = diagnostic.help {
+                        eprintln!("help: {help}");
+                    }
+                }
+            }
         }
     }
 
