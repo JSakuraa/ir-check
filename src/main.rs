@@ -1,6 +1,7 @@
 mod diagnostic;
 mod ir;
 mod parser;
+mod passes;
 
 use clap::{Parser, Subcommand};
 use std::fs;
@@ -27,7 +28,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let source = fs::read_to_string(&file)?;
             match parser::parse(&source) {
                 Ok(program) => {
-                    println!("{program:#?}");
+                    let diagnostics = passes::analyze(&program);
+
+                    if diagnostics.is_empty() {
+                        println!("✓ program is valid");
+                    } else {
+                        for diagnostic in diagnostics {
+                            eprintln!(
+                                "error[{}] on line {}: {}",
+                                diagnostic.code.as_str(),
+                                diagnostic.span.line,
+                                diagnostic.message
+                            );
+
+                            if let Some(help) = diagnostic.help {
+                                eprintln!("help: {help}");
+                            }
+
+                            eprintln!();
+                        }
+                    }
                 }
                 Err(diagnostic) => {
                     eprintln!(

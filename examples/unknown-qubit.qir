@@ -1,0 +1,4 @@
+qubit q0
+
+h q0
+cx q0 q1
