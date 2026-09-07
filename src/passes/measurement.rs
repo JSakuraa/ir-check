@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::diagnostic::{Diagnostic, DiagnosticCode, Severity};
-use crate::ir::{Instruction, Program, Span};
+use crate::ir::{Instruction, Program};
 
 pub fn run(program: &Program) -> Vec<Diagnostic> {
     let mut diagnostics = Vec::new();
