@@ -63,8 +63,7 @@ measure q1";
 
     #[test]
     fn detects_operation_after_measurement() {
-        let program =
-            parse("qubit q0\nmeasure q0\nh q0").unwrap();
+        let program = parse("qubit q0\nmeasure q0\nh q0").unwrap();
 
         let diagnostics = analyze(&program);
 
@@ -77,8 +76,7 @@ measure q1";
 
     #[test]
     fn detects_duplicate_measurement() {
-        let program =
-            parse("qubit q0\nmeasure q0\nmeasure q0").unwrap();
+        let program = parse("qubit q0\nmeasure q0\nmeasure q0").unwrap();
 
         let diagnostics = analyze(&program);
 
@@ -91,8 +89,7 @@ measure q1";
 
     #[test]
     fn detects_invalid_cx_operands() {
-        let program =
-            parse("qubit q0\ncx q0 q0").unwrap();
+        let program = parse("qubit q0\ncx q0 q0").unwrap();
 
         let diagnostics = analyze(&program);
 

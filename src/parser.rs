@@ -1,5 +1,5 @@
 use crate::diagnostic::{Diagnostic, DiagnosticCode, Severity};
-use crate::ir::{Instruction, Program, SpannedInstruction, Span};
+use crate::ir::{Instruction, Program, Span, SpannedInstruction};
 
 pub fn parse(source: &str) -> Result<Program, Diagnostic> {
     let mut instructions = Vec::new();
@@ -24,13 +24,16 @@ pub fn parse(source: &str) -> Result<Program, Diagnostic> {
                 length: line.len(),
             },
         });
-    
     }
-    
+
     Ok(Program { instructions })
 }
 
-fn parse_instruction(tokens: &[&str], line: usize, source_line: &str) -> Result<Instruction, Diagnostic> {
+fn parse_instruction(
+    tokens: &[&str],
+    line: usize,
+    source_line: &str,
+) -> Result<Instruction, Diagnostic> {
     match tokens {
         ["qubit", name] => Ok(Instruction::QubitDeclaration {
             name: (*name).to_string(),
@@ -86,22 +89,11 @@ fn parse_instruction(tokens: &[&str], line: usize, source_line: &str) -> Result<
 
         [] => unreachable!(),
 
-        _ => Err(syntax_error(
-            line,
-            source_line,
-            "unknown instruction",
-            None,
-        )),
+        _ => Err(syntax_error(line, source_line, "unknown instruction", None)),
     }
 }
 
-
-fn syntax_error(
-    line: usize,
-    source_line: &str,
-    message: &str,
-    help: Option<&str>,
-) -> Diagnostic {
+fn syntax_error(line: usize, source_line: &str, message: &str, help: Option<&str>) -> Diagnostic {
     Diagnostic {
         code: DiagnosticCode::InvalidSyntax,
         severity: Severity::Error,

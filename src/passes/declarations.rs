@@ -16,47 +16,29 @@ pub fn run(program: &Program) -> Vec<Diagnostic> {
                         severity: Severity::Error,
                         message: format!("Duplicate declaration of qubit `{name}`"),
                         span: item.span.clone(),
-                        help: Some(format!(
-                            "Remove the duplicate declaration of `{name}`"
-                        )),
+                        help: Some(format!("Remove the duplicate declaration of `{name}`")),
                     });
                 } else {
                     declarations.insert(name.clone(), item.span.clone());
                 }
             }
 
-            Instruction::H { qubit}
+            Instruction::H { qubit }
             | Instruction::X { qubit }
             | Instruction::Measure { qubit } => {
-                check_declared(
-                    qubit,
-                    &item.span,
-                    &declarations,
-                    &mut diagnostics,
-                );
+                check_declared(qubit, &item.span, &declarations, &mut diagnostics);
             }
 
             Instruction::CX { control, target } => {
-                check_declared(
-                    control,
-                    &item.span,
-                    &declarations,
-                    &mut diagnostics,
-                );
+                check_declared(control, &item.span, &declarations, &mut diagnostics);
 
-                check_declared(
-                    target,
-                    &item.span,
-                    &declarations,
-                    &mut diagnostics,
-                );
+                check_declared(target, &item.span, &declarations, &mut diagnostics);
             }
         }
     }
 
     diagnostics
 }
-
 
 fn check_declared(
     qubit: &str,
@@ -70,9 +52,7 @@ fn check_declared(
             severity: Severity::Error,
             message: format!("unknown qubit `{qubit}`"),
             span: span.clone(),
-            help: Some(format!(
-                "declare `{qubit}` before using it"
-            )),
+            help: Some(format!("declare `{qubit}` before using it")),
         });
     }
 }

@@ -9,23 +9,21 @@ pub fn run(program: &Program) -> Vec<Diagnostic> {
 
     for item in &program.instructions {
         match &item.instruction {
-            Instruction::Measure {qubit} => {
+            Instruction::Measure { qubit } => {
                 if measured.contains(qubit) {
                     diagnostics.push(Diagnostic {
                         code: DiagnosticCode::DuplicateMeasurement,
                         severity: Severity::Error,
                         message: format!("qubit `{qubit}` was measured more than once"),
                         span: item.span.clone(),
-                        help: Some(format!(
-                            "Remove the repeated measurement of `{qubit}`"
-                        )),
+                        help: Some(format!("Remove the repeated measurement of `{qubit}`")),
                     });
                 } else {
                     measured.insert(qubit.clone());
                 }
             }
 
-            Instruction::H {qubit} | Instruction::X { qubit } => {
+            Instruction::H { qubit } | Instruction::X { qubit } => {
                 check_active(qubit, item, &measured, &mut diagnostics);
             }
 
@@ -53,9 +51,7 @@ fn check_active(
             severity: Severity::Error,
             message: format!("Operation on measured qubit `{qubit}`"),
             span: item.span.clone(),
-            help: Some(format!(
-                "Move this operation before `measure {qubit}`"
-            )),
+            help: Some(format!("Move this operation before `measure {qubit}`")),
         });
     }
 }

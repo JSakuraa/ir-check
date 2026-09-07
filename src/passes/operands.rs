@@ -10,14 +10,9 @@ pub fn run(program: &Program) -> Vec<Diagnostic> {
                 diagnostics.push(Diagnostic {
                     code: DiagnosticCode::InvalidCxOperands,
                     severity: Severity::Error,
-                    message: format!(
-                        "control and target both refer to `{control}`"
-                    ),
+                    message: format!("control and target both refer to `{control}`"),
                     span: item.span.clone(),
-                    help: Some(
-                        "use different qubits for the CX control and target"
-                            .to_string(),
-                    ),
+                    help: Some("use different qubits for the CX control and target".to_string()),
                 });
             }
         }
