@@ -174,4 +174,28 @@ mod tests {
         assert_eq!(diagnostic.span.line, 1);
         assert!(diagnostic.help.is_some());
     }
+
+    #[test]
+    fn parses_x_gate() {
+        let program = parse("x q0").unwrap();
+
+        assert_eq!(
+            program.instructions[0].instruction,
+            Instruction::X {
+                qubit: "q0".to_string()
+            }
+        );
+    }
+
+    #[test]
+    fn parses_measurement() {
+        let program = parse("measure q0").unwrap();
+
+        assert_eq!(
+            program.instructions[0].instruction,
+            Instruction::Measure {
+                qubit: "q0".to_string()
+            }
+        );
+    }
 }

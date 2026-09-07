@@ -99,4 +99,36 @@ measure q1";
                 .any(|d| d.code == DiagnosticCode::InvalidCxOperands)
         );
     }
+
+    #[test]
+    fn reports_multiple_semantic_errors() {
+        let program = parse(
+            "\
+    qubit q0
+    measure q0
+    h q0
+    cx q1 q1",
+        )
+        .unwrap();
+
+        let diagnostics = analyze(&program);
+
+        assert!(
+            diagnostics
+                .iter()
+                .any(|d| d.code == DiagnosticCode::OperationAfterMeasurement)
+        );
+
+        assert!(
+            diagnostics
+                .iter()
+                .any(|d| d.code == DiagnosticCode::UnknownQubit)
+        );
+
+        assert!(
+            diagnostics
+                .iter()
+                .any(|d| d.code == DiagnosticCode::InvalidCxOperands)
+        );
+    }
 }
